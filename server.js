@@ -36,7 +36,7 @@ app.post("/register", (req, res) => {
     const { name, email, password, age, gender, practice, field, license, is_doc, about_me, years } = req.body;
     const salt = bcrypt.genSaltSync(5);
     const hash = bcrypt.hashSync(password, salt);
-    
+
     console.log(req.body);
 
     return knex('users').insert({
@@ -59,6 +59,7 @@ app.post("/register", (req, res) => {
 
 // login by email and password
 app.post("/signin", (req, res) => {
+    console.log(req.body);
     const { email, password } = req.body;
 
     return knex.select("email", "password").from("users")
@@ -79,6 +80,7 @@ app.post("/signin", (req, res) => {
 })
 
 app.get("/users/:id", (req, res) => {
+    console.log(req.params);
     const { id } = req.params;
 
     return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about")
@@ -95,6 +97,7 @@ app.get("/users/:id", (req, res) => {
 })
 
 app.post("/post/addPost", (req, res) => {
+    console.log(req.body);
     const { post, user_id } = req.body;
 
     return knex("posts").insert({
