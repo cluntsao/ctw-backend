@@ -110,8 +110,11 @@ app.post("/post/addPost", (req, res) => {
 
 app.get("/post/getAllPosts", (req, res) => {
     
-    return knex.select("*").from("posts").limit(10)
-           .then(data => res.send(data)) 
+    return knex("posts").join('users', "users.user_id", "=", "posts.user_id")
+           .select("posts.post_id", "posts.post", "posts.date", "posts.user_id", "users.name")
+           .then(data => res.send(data))
+    // return knex.select("*").from("posts").limit(10)
+    //        .then(data => res.send(data)) 
 })
 
 app.get("/post/getUserPosts/:id", (req, res) => {
@@ -122,7 +125,7 @@ app.get("/post/getUserPosts/:id", (req, res) => {
         
 })
 
-app.post("/reply/addReply", (req, res) => {
+app.post("/reply", (req, res) => {
     const { reply, user_id, post_id } = req.body;
 
     knex("replies").insert({
@@ -132,6 +135,17 @@ app.post("/reply/addReply", (req, res) => {
         date: new Date()
     })
     .then(res.json("success"))
+})
+
+app.get("/reply", (req, res) => {
+    const { user_id, post_id } = req.body;
+
+    knex.select("reply").from("replies").where("user_id", "=", user_id, "and", "post_id", "=", post_id)
+    .then(data => {
+        console.log(data);
+        return data
+    })
+    .then(data => res.send(data))
 })
 
 app.listen(port, () => {
