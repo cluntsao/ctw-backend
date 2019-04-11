@@ -36,6 +36,8 @@ app.post("/register", (req, res) => {
     const { name, email, password, age, gender, practice, field, license, is_doc, about_me, years } = req.body;
     const salt = bcrypt.genSaltSync(5);
     const hash = bcrypt.hashSync(password, salt);
+    
+    console.log(req.body);
 
     return knex('users').insert({
         name,
