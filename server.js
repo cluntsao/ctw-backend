@@ -63,7 +63,10 @@ app.post("/signin", (req, res) => {
         const isValid = bcrypt.compareSync(password, data[0]["password"]);
 
         if (isValid) {
-            return knex.select("user_id").from("users").then(data => res.send(data[0]))
+            return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license")
+            .from("users")
+            .then(data => res.send(data[0]))
+            
         } else {
             return res.status(404).json("Wrong Credential")
         }
@@ -93,6 +96,10 @@ app.post("/reply", (req, res) => {
     })
     .then(res.json("success"))
 })
+
+// app.get("/:id", (req, res) => {
+
+// })
 
 app.listen(port, () => {
     console.log(`api is listening on port ${port}`)
