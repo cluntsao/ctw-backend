@@ -68,7 +68,7 @@ app.post("/signin", (req, res) => {
         const isValid = bcrypt.compareSync(password, data[0]["password"]);
 
         if (isValid) {
-            return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about")
+            return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about_me")
             .from("users")
             .then(data => res.send(data[0]))
 
@@ -83,7 +83,7 @@ app.get("/users/:id", (req, res) => {
     console.log(req.params);
     const { id } = req.params;
 
-    return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about")
+    return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about_me")
                .from("users")
                .where("user_id", "=", id)
                .then(data => {
