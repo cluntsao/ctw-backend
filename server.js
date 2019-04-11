@@ -63,10 +63,10 @@ app.post("/signin", (req, res) => {
         const isValid = bcrypt.compareSync(password, data[0]["password"]);
 
         if (isValid) {
-            return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license")
+            return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about")
             .from("users")
             .then(data => res.send(data[0]))
-            
+
         } else {
             return res.status(404).json("Wrong Credential")
         }
@@ -74,15 +74,45 @@ app.post("/signin", (req, res) => {
     .catch(err => res.status(400).json("Wrong Credential"))
 })
 
-app.post("/post", (req, res) => {
+app.get("/users/:id", (req, res) => {
+    const { id } = req.params;
+
+    return knex.select("user_id", "joined", "name", "email", "age", "gender", "is_doc", "practice", "field", "license", "about")
+               .from("users")
+               .where("user_id", "=", id)
+               .then(data => {
+                   if (!data[0]) {
+                       return res.send("no such user")
+                   } else {
+                        return res.send(data[0])
+                   }
+               })
+               .catch(err => console.log(err))
+})
+
+app.post("/post/addPost", (req, res) => {
     const { post, user_id } = req.body;
 
-    knex("posts").insert({
+    return knex("posts").insert({
         user_id,
         post,
         date: new Date()
     })
     .then(res.json("success"))
+})
+
+app.get("/post/getAllPosts", (req, res) => {
+    
+    return knex.select("*").from("posts").limit(10)
+           .then(data => res.send(data)) 
+})
+
+app.get("/post/getUserPosts/:id", (req, res) => {
+    const { id } = req.params;
+
+    return knex.select("*").from("posts").where("user_id", "=", id).orderBy("date", "desc")
+           .then(data => res.send(data))
+        
 })
 
 app.post("/reply", (req, res) => {
@@ -96,10 +126,6 @@ app.post("/reply", (req, res) => {
     })
     .then(res.json("success"))
 })
-
-// app.get("/:id", (req, res) => {
-
-// })
 
 app.listen(port, () => {
     console.log(`api is listening on port ${port}`)
