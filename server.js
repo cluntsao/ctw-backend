@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-    const { name, email, password, age, gender, practice, field, license, is_doc } = req.body;
+    const { name, email, password, age, gender, practice, field, license, is_doc, about_me, years } = req.body;
     const salt = bcrypt.genSaltSync(5);
     const hash = bcrypt.hashSync(password, salt);
 
@@ -47,6 +47,8 @@ app.post("/register", (req, res) => {
         practice,
         field,
         license,
+        about_me,
+        years,
         joined: new Date()
     })
     .then(res.json("success"))
@@ -115,7 +117,7 @@ app.get("/post/getUserPosts/:id", (req, res) => {
         
 })
 
-app.post("/reply", (req, res) => {
+app.post("/reply/addReply", (req, res) => {
     const { reply, user_id, post_id } = req.body;
 
     knex("replies").insert({
