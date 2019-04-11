@@ -63,7 +63,7 @@ app.post("/signin", (req, res) => {
         const isValid = bcrypt.compareSync(password, data[0]["password"]);
 
         if (isValid) {
-            return res.send("success")
+            return knex.select("user_id").from("users").then(data => res.send(data[0]))
         } else {
             return res.status(404).json("Wrong Credential")
         }
