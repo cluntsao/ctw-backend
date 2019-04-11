@@ -1,0 +1,5 @@
+CREATE TABLE users (user_id serial primary key not null, name varchar(100) not null, email varchar(100) unique not null, joined timestamp not null, gender varchar(10), password varchar(100), is_doc boolean not null, practice text, field text, license text, age int not null);
+
+CREATE TABLE replies (reply_id serial primary key not null, reply text, date timestamp not null, post_id int not null, user_id int not null);
+
+CREATE TABLE posts (post_id serial primary key not null, post text, date timestamp not null, user_id int not null);
